@@ -52,6 +52,14 @@ public:
 	void clearInstance();
 
 	int getNbItems() const {return nbItems;	};
+
+	void import(int n, int B, vector<int>& w, vector<int>& v){
+		nbItems = n;
+		knapsackBound = B;
+		weights = w;
+		values = v;
+	}
+	void copySolution(vector<bool> *sol) {sol->clear();*sol = solution;}
 };
 
 #endif
