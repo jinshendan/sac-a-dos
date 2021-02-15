@@ -23,7 +23,6 @@ void KpSolverDP::solve() {
 //	if (verboseMode) cout << "first column DP matrix filled" << endl;
 
 //	if (verboseMode) cout << "fill  DP matrix : " << endl;
-
 	if (memoizedVersion) costSolution = solveMemoized(nbItems-1,knapsackBound);
 	else solveIter();
 
@@ -65,6 +64,16 @@ void KpSolverDP::fillFirstColumnDP(){
 
 void KpSolverDP::solveIter() {
 	//TODO
+	costSolution = 0;
+	for(int i = 1; i < nbItems; i++){
+		for (int j = 0; j <= knapsackBound; j++){
+			matrixDP[i][j] = matrixDP[i-1][j];
+			if (j >= weights[i]){
+				matrixDP[i][j] = max(matrixDP[i][j], matrixDP[i-1][j-weights[i]] + values[i]);
+			}
+		}
+	}
+	costSolution = matrixDP[nbItems-1][knapsackBound];
 }
 
 
@@ -79,8 +88,17 @@ int KpSolverDP::solveMemoized(int i , int m) {
 }
 
 void KpSolverDP::backtrack() {
-
 	//TODO
+	solution.resize(nbItems);
+	int j = knapsackBound;
+	for (int i = nbItems-1; i >= 1; i--){
+		if (matrixDP[i][j] != matrixDP[i-1][j]) {
+			j -= weights[i];
+			solution[i] = true;
+		}
+	}	
+	if (matrixDP[0][j])
+		solution[0] = true; 
 }
 
 void KpSolverDP::printMatrixDP() {
